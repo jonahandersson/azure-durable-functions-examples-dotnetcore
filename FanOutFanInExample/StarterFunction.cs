@@ -23,7 +23,7 @@ namespace FanOutFanInExample
             var orderIds = Enumerable.Range(0, 10);
 
             // Function input comes from the request content.
-            string instanceId = await starter.StartNewAsync("Orchestrator", orderIds.ToList());
+            string instanceId = await starter.StartNewAsync("OrchestratorFunction", orderIds.ToList());
             log.LogInformation($"Started orchestration with ID = '{instanceId}'.");
 
             return starter.CreateCheckStatusResponse(req, instanceId);

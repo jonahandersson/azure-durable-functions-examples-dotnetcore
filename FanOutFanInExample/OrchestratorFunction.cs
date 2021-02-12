@@ -14,8 +14,9 @@ namespace FanOutFanInExample
     {
         [FunctionName("OrchestratorFunction")]
         public static async Task<string> RunOrchestrator(
-            [OrchestrationTrigger] IDurableOrchestrationContext context)
+            [OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
         {
+
             var orders = context.GetInput<List<string>>();
             var orderTasks = new List<Task<double>>();
             for (int i = 0; i < orders.Count; i++)
@@ -29,6 +30,8 @@ namespace FanOutFanInExample
 
             var invoiceOrderSummary = await context.CallActivityAsync<string>("GenerateOrderInvoiceActivity",
                   orderAmounts);
+
+            log.LogInformation("Done summing up the orders. See logs");
 
             return invoiceOrderSummary;
         }
