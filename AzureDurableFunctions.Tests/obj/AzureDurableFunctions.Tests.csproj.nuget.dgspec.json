@@ -1,0 +1,235 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\AzureDurableFunctions.Tests\\AzureDurableFunctions.Tests.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\AzureDurableFunctions.Tests\\AzureDurableFunctions.Tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\AzureDurableFunctions.Tests\\AzureDurableFunctions.Tests.csproj",
+        "projectName": "AzureDurableFunctions.Tests",
+        "projectPath": "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\AzureDurableFunctions.Tests\\AzureDurableFunctions.Tests.csproj",
+        "packagesPath": "C:\\Users\\jonah.andersson\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\AzureDurableFunctions.Tests\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\jonah.andersson\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {
+              "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\DurableFunctionsExamples\\FunctionChainExample.csproj": {
+                "projectPath": "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\DurableFunctionsExamples\\FunctionChainExample.csproj"
+              },
+              "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\FanOutFanInExample\\FanOutFanInExample.csproj": {
+                "projectPath": "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\FanOutFanInExample\\FanOutFanInExample.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.AspNetCore.Mvc.Core": {
+              "target": "Package",
+              "version": "[2.2.5, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[16.7.1, )"
+            },
+            "coverlet.collector": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.3.0, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.4.1, )"
+            },
+            "xunit.runner.visualstudio": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.4.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\DurableFunctionsExamples\\FunctionChainExample.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\DurableFunctionsExamples\\FunctionChainExample.csproj",
+        "projectName": "FunctionChainExample",
+        "projectPath": "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\DurableFunctionsExamples\\FunctionChainExample.csproj",
+        "packagesPath": "C:\\Users\\jonah.andersson\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\DurableFunctionsExamples\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\jonah.andersson\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.Azure.WebJobs.Extensions.DurableTask": {
+              "target": "Package",
+              "version": "[2.1.1, )"
+            },
+            "Microsoft.NET.Sdk.Functions": {
+              "target": "Package",
+              "version": "[3.0.11, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\FanOutFanInExample\\FanOutFanInExample.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\FanOutFanInExample\\FanOutFanInExample.csproj",
+        "projectName": "FanOutFanInExample",
+        "projectPath": "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\FanOutFanInExample\\FanOutFanInExample.csproj",
+        "packagesPath": "C:\\Users\\jonah.andersson\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\FanOutFanInExample\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\jonah.andersson\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.Azure.WebJobs.Extensions.DurableTask": {
+              "target": "Package",
+              "version": "[2.4.1, )"
+            },
+            "Microsoft.NET.Sdk.Functions": {
+              "target": "Package",
+              "version": "[3.0.11, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
