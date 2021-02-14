@@ -13,7 +13,8 @@ namespace HttpAsyncAPIExample
     public static class CheckIfMySiteIsAvailable
     {
         [FunctionName("CheckWebsiteIsAvailable")]
-        public static async Task CheckWebsiteIsAvailable([OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
+        public static async Task CheckWebsiteIsAvailable([OrchestrationTrigger] IDurableOrchestrationContext context, 
+            ILogger log)
         {
             try
             {
@@ -24,8 +25,12 @@ namespace HttpAsyncAPIExample
 
                 if ((int)httpResponse.StatusCode >= 500 && (int)httpResponse.StatusCode < 600)
                     throw new HttpRequestException("Hey, there is a server error! Something wrong with your website. Fix it Jonah!");
-                else               
-                    log.LogInformation($"Completed: {httpResponse.StatusCode} {httpResponse.Content}");                
+                else
+                {
+                  await context.CallActivityAsync<string>("CheckHttpResponseActivity", httpResponse);                   
+                    log.LogInformation($"Completed: {httpResponse.StatusCode} {httpResponse.Content}");
+                }             
+        
             }
             catch (Exception ex)
             {
@@ -35,13 +40,6 @@ namespace HttpAsyncAPIExample
              
         }
 
-
-        [FunctionName("Function1_Hello")]
-        public static string SayHello([ActivityTrigger] string name, ILogger log)
-        {
-            log.LogInformation($"Saying hello to {name}.");
-            return $"Hello {name}!";
-        }
 
     }
 }
