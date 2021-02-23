@@ -1,0 +1,8 @@
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Helpers\bin\Debug\netstandard2.1\AzureDurableFunctions.Helpers.deps.json
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Helpers\bin\Debug\netstandard2.1\AzureDurableFunctions.Helpers.dll
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Helpers\bin\Debug\netstandard2.1\AzureDurableFunctions.Helpers.pdb
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Helpers\obj\Debug\netstandard2.1\AzureDurableFunctions.Helpers.AssemblyInfoInputs.cache
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Helpers\obj\Debug\netstandard2.1\AzureDurableFunctions.Helpers.AssemblyInfo.cs
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Helpers\obj\Debug\netstandard2.1\AzureDurableFunctions.Helpers.csproj.CoreCompileInputs.cache
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Helpers\obj\Debug\netstandard2.1\AzureDurableFunctions.Helpers.dll
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Helpers\obj\Debug\netstandard2.1\AzureDurableFunctions.Helpers.pdb

@@ -1,0 +1,6 @@
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Tests\bin\Debug\net5.0\CoverletSourceRootsMapping
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Tests\obj\Debug\net5.0\AzureDurableFunctions.Tests.csprojAssemblyReference.cache
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Tests\obj\Debug\net5.0\AzureDurableFunctions.Tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Tests\obj\Debug\net5.0\AzureDurableFunctions.Tests.AssemblyInfoInputs.cache
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Tests\obj\Debug\net5.0\AzureDurableFunctions.Tests.AssemblyInfo.cs
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Tests\obj\Debug\net5.0\AzureDurableFunctions.Tests.csproj.CoreCompileInputs.cache

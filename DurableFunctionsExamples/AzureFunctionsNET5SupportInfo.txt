@@ -1,0 +1,28 @@
+﻿.NET 5 support on Azure Functions
+Since the first release of Azure Functions, .NET support has been tightly coupled to the Azure Functions runtime. While this tight integration enables features unique to .NET functions—such as rich binding types—it also means new releases of .NET can only be supported by updating the .NET version of the host.
+
+ 
+
+.NET has adopted a support lifecycle policy that involves a yearly upgrade cycle, with even numbered versions designated as Long Term Support (LTS) releases. .NET 5 is the first Current (non-LTS) release under the new policy. The Azure Functions runtime is a critical component that powers on all of our customers’ production apps and our local development tooling. Because we’re sometimes required to support specific releases of the runtime for extended periods, we cannot upgrade it to a non-LTS version of .NET due to its short support timeline.
+
+ 
+
+To enable .NET 5 in Azure Functions, we are moving to an out-of-process model that runs a .NET 5 worker process alongside the runtime. This is the same out-of-process model that all non-.NET Azure Functions languages have used successfully since Azure Functions V2.
+
+ 
+
+The .NET 5 worker provides a similar Azure Functions programming model that you’re used to. At the same time, because it runs in a separate process, it allows you full control of your app’s dependencies without worrying about conflicts with the dependencies used by the runtime. The .NET 5 worker also introduces new features, such as a customizable middleware pipeline.
+
+ 
+
+Starting today, you can access an early preview of the Azure Functions .NET 5 worker at this GitHub repository. You can run and debug .NET 5 function apps locally and deploy them to Azure using the Azure Functions Core Tools CLI. More tooling support, including Visual Studio and Visual Studio Code, will arrive in the coming weeks.
+
+ 
+
+The .NET 5 worker will be generally available in early 2021.
+
+ 
+
+We realize that customers who are early adopters of .NET 5 have been disappointed by the delay of .NET 5 in Azure Functions. Building a new language worker from scratch has taken some time. We understand your frustration and appreciate your patience. The investment to separate the .NET worker from the runtime will allow us to quickly support future .NET versions. We expect to support .NET 6 LTS as soon as it is released.
+
+ 
