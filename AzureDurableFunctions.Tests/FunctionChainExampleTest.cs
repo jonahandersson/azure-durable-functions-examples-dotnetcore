@@ -9,9 +9,10 @@ namespace AzureDurableFunctions.Tests
 {
     public class FunctionChainExampleTest
     {
+        ILogger logger; 
        
         [Fact]
-        public async Task<Task> Run_returns_multiple_greetings()
+        public async Task<Task> RunOchestractor_returns_multiple_greetings_fromList()
         {
             var contextMock = new Mock<IDurableOrchestrationContext>();
             contextMock.Setup(context => context.CallActivityAsync<string>("NameGreeterActivity", "Mae Hodges"))
@@ -24,7 +25,7 @@ namespace AzureDurableFunctions.Tests
             //Assert.AreEqual(“Hello London!”, result[2]);
 
 
-          var result = await ChainedFunctions.RunOrchestrator(contextMock.Object);
+          var result = await ChainedFunctions.RunOrchestrator(contextMock.Object, logger);
 
             Assert.Equal(3, result.Count);
             Assert.Equal("Hello Tokyo!", result[0]);

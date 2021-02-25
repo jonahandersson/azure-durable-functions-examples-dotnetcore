@@ -11,29 +11,53 @@ using Microsoft.Extensions.Logging;
 
 namespace FunctionChainExample
 {
+    /// <summary>
+    ///  Jonah's mini project examples of Azure Durable Functions 
+    ///  Pattern: Function Chaining
+    /// </summary>
     public static class ChainedFunctions
     {
         [FunctionName("ChainedFunctions_Orchestrator")]
         public static async Task<List<string>> RunOrchestrator(
             [OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
         {
-            var outputs = new List<string>();            
-            var nameLists = ReadInputStringsFromFile();
-
-            if (nameLists.Count > 0)
+            try
             {
-                foreach (var name in nameLists)
+                var greetingsOutputs = new List<string>();
+                var exportedGreetingsOutput = new List<string>();
+
+                // Read names from local text file .txt 
+                //TODO: Make this method as activity               
+                var nameLists = ReadInputStringsFromFile();
+
+                // CHAIN #1 - Add names to output list and greet each person in the text file using NameGreetingActivity
+                if (nameLists.Count > 0)
                 {
-                    outputs.Add(await context.CallActivityAsync<string>("ChainedFunctions_NameGreeterActivity", name));
+                    foreach (var name in nameLists)
+                    {
+                        greetingsOutputs.Add(await context.CallActivityAsync<string>("ChainedFunctions_NameGreeterActivity", name));
+                    }
                 }
+
+                log.LogInformation($" DONE! Said Hello to {nameLists.Count} people " + "\n");
+
+                //CHAIN#2 - Email the output greetings using SendGrid API
+                if (greetingsOutputs.Count > 0)
+                {
+                    await context.CallActivityAsync("ChainedFunctions_SaveToOutputResultFileActivity", greetingsOutputs);
+                }
+            
+                //CHAIN#3 - Email the output greetings using SendGrid API
+                //TODO: Nullcheck & add sendgrid API to send email
+                await context.CallActivityAsync("SendAllGreetingsToEmailActivity", exportedGreetingsOutput);                
+
+                return greetingsOutputs; //Print to console logs 
             }
-           
-            log.LogInformation($" DONE! Said Hello to {nameLists.Count} people " + "\n");
-            //TODO: Add a new custom activity  returns strings greeting "Hello" + each name on on the file list and send to email 
-            await context.CallActivityAsync("SendAllGreetingsToEmailActivity", outputs);
-          
-            return outputs; //Print to console logs 
-           
+            catch (Exception)
+            {
+
+                throw;
+            }           
         }
 
         [FunctionName("ChainedFunctions_NameGreeterActivity")]
@@ -55,6 +79,26 @@ namespace FunctionChainExample
             log.LogInformation($"Started orchestration with ID = '{instanceId}'." + "\n");          
 
             return starter.CreateCheckStatusResponse(req, instanceId);
+        }
+
+        [FunctionName("ChainedFunctions_SaveToOutputResultFileActivity")]
+        public static List<string> SaveGreetingsToOutputLocalFile([ActivityTrigger] List<string> outputGreetings, ILogger log)
+        {
+            try
+            {
+                if (outputGreetings.Count > 0)
+                {
+                    File.WriteAllLinesAsync("outputResult.txt", outputGreetings); //TODO Debug
+                }
+               log.LogInformation($"Done writng greetings to output text file. Input FIle had total names of '{outputGreetings.Count}'." + "\n");
+
+                return outputGreetings;
+            }
+            catch (Exception)
+            {
+                //TODO : Handle errors and exceptions 
+                throw;
+            }
         }
 
 

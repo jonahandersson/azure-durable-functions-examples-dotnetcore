@@ -27,8 +27,9 @@ namespace HttpAsyncAPIExample
                     throw new HttpRequestException("Hey, there is a server error! Something wrong with your website. Fix it Jonah!");
                 else
                 {
-                  await context.CallActivityAsync<string>("CheckHttpResponseActivity", httpResponse);                   
-                    log.LogInformation($"Completed: {httpResponse.StatusCode} {httpResponse.Content}");
+                  await context.CallActivityAsync<string>("CheckHttpResponseActivity", httpResponse);
+                    log.LogInformation($"Completed: STATUS CODE  = {httpResponse.StatusCode}");
+                    log.LogInformation($"Completed: HEADER  = {httpResponse.Headers}");
                 }             
         
             }

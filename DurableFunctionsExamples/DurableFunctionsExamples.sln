@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDurableFunctions.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpAsyncAPIExample", "..\HttpAsyncAPIExample\HttpAsyncAPIExample.csproj", "{F5CD95BD-39DC-46EA-8863-B189CC2A27B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumanInteractionExample", "..\HumanInteractionExample\HumanInteractionExample.csproj", "{95767B85-1376-4431-8363-D7F1CE842DC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HumanInteractionExample", "..\HumanInteractionExample\HumanInteractionExample.csproj", "{95767B85-1376-4431-8363-D7F1CE842DC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDurableFunctionsUpgradeNet5Example", "..\AzureDurableFunctionsUpgradeNet5Example\AzureDurableFunctionsUpgradeNet5Example.csproj", "{B685A8C3-F599-4A23-BCB9-D8E430E710CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{95767B85-1376-4431-8363-D7F1CE842DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95767B85-1376-4431-8363-D7F1CE842DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95767B85-1376-4431-8363-D7F1CE842DC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B685A8C3-F599-4A23-BCB9-D8E430E710CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B685A8C3-F599-4A23-BCB9-D8E430E710CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B685A8C3-F599-4A23-BCB9-D8E430E710CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B685A8C3-F599-4A23-BCB9-D8E430E710CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
