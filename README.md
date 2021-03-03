@@ -3,4 +3,6 @@
 Examples for demo of Azure Durable Functions with different patterns, examples and more. 
 This Project is still in progress. Feel free to clone if you want to do hands-on with it or contribute. 
 
-Learn more about Azure Durable Functions at https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-overview?tabs=csharp
+My technical blog article about is also available on my DEV Community blog Azure Durable Functions - Developing Serverless Stateful Workflow, https://dev.to/jonahandersson/azure-durable-functions-developing-serverless-stateful-workflow-4787 
+
+Learn more about Azure Durable Functions at Microsoft's website https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-overview?tabs=csharp
