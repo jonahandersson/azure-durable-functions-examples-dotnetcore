@@ -1,4 +1,4 @@
-# Jonah's Mini Project for Azure Durable Functions for Serverless Workflows
+# Jonah's Mini Project for Azure Durable Functions for Serverless Workflows - Simple Examples of Different Patterns
 
 Examples for demotration and learning of Azure Durable Functions with different patterns, examples and more. 
 This Project is still in progress. Feel free to clone if you want to do hands-on with it or contribute. 
