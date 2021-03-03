@@ -8,3 +8,6 @@ My technical blog article about is also available on my DEV Community blog Azure
 Learn more about Azure Durable Functions at Microsoft's website https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-overview?tabs=csharp
 
 For any questions and comments, feel free to connect with me via my website https://jonahandersson.tech/
+
+![Azure Durable Functions ](https://res.cloudinary.com/practicaldev/image/fetch/s--ZLRcxgFl--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/nn4omvazvvhsvf8v9bmg.png)
+
