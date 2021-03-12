@@ -138,60 +138,65 @@ namespace FunctionChainExample
         [FunctionName("SendAllGreetingsToEmailActivity")]
         public static async Task<string> SendEmailsAsync([ActivityTrigger] List<string> messages, ILogger log)
         {
-            //TODO 
-            var sendGridAPIKey = "<Your SENDGRID API KEY here -->";
-            var client = new SendGridClient(sendGridAPIKey);
-                
-            var msg = new SendGridMessage();
-            msg.SetFrom(new EmailAddress("admin@jonahandersson.tech", "SendGrid Test From App"));
-
-            var recipients = new List<EmailAddress>
-            {
-                new EmailAddress("cjonah@example.se", "Jane Doe"),
-                new EmailAddress("anna@example.com", "Anna Lidman"),
-                new EmailAddress("peter@example.com", "Peter Saddow")
-            };
-            
-
-            msg.AddTos(recipients);
-            msg.SetSubject("Hello To List Of People Sender using SendGrid and Azure Durable Functions");
-            msg.AddContent(MimeType.Text, "Hello World plain text!");
-            msg.AddContent(MimeType.Html, "<p>Hello World!</p>");
-
-            if (messages.Count > 0)
-            {
-                foreach (var helloMessage in messages)
-                {
-                    msg.AddContent(MimeType.Html, "<b>" + helloMessage + "</b>");
-                }              
-            }
          
-          
-            var displayRecipients = false; // set this to true if you want recipients to see each others mail id          
-            var response = await client.SendEmailAsync(msg);
-
-            bool isEmailSent = false;
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                isEmailSent = true;
+                var sendGridAPIKey = "<Your SENDGRID API KEY here -->";
+                var client = new SendGridClient(sendGridAPIKey);
+
+                var msg = new SendGridMessage();
+                msg.SetFrom(new EmailAddress("admin@jonahandersson.tech", "SendGrid Test From App"));
+
+                var recipients = new List<EmailAddress>
+                {
+                    new EmailAddress("cjonah@example.se", "Jane Doe"),
+                    new EmailAddress("anna@example.com", "Anna Lidman"),
+                    new EmailAddress("peter@example.com", "Peter Saddow")
+                };
+
+
+                msg.AddTos(recipients);
+                msg.SetSubject("Hello To List Of People Sender using SendGrid and Azure Durable Functions");
+                msg.AddContent(MimeType.Text, "Hello World plain text!");
+                msg.AddContent(MimeType.Html, "<p>Hello World!</p>");
+
+                if (messages.Count > 0)
+                {
+                    foreach (var helloMessage in messages)
+                    {
+                        msg.AddContent(MimeType.Html, "<b>" + helloMessage + "</b>");
+                    }
+                }
+
+                var response = await client.SendEmailAsync(msg);
+                bool isEmailSent = false;
+                if (response.IsSuccessStatusCode)
+                {
+                    isEmailSent = true;
+                }
+
+                //TODO : Add output text as attachment to email 
+                //var helloNamesAttachments = new Attachment()
+                //{
+                //    Content = Convert.ToBase64String(outputResultFilePath);
+                //    Type = "text/txt",
+                //    Filename = "HelloNamesPoweredByAzureDurableFunctions.png",
+                //    Disposition = "inline",
+                //    ContentId = "Banner 2"
+                //};
+                //msg.AddAttachment(banner2);
+
+
+                log.LogInformation($"sending email to  {recipients }.");
+                log.LogInformation($"All emails sent {isEmailSent }.");
+                return $"Email sent is {isEmailSent}!";
             }
+            catch (Exception)
+            {
+                //TODO: Handle errors 
 
-            //TODO : Add output text as attachment to email 
-            //var helloNamesAttachments = new Attachment()
-            //{
-            //    Content = Convert.ToBase64String(outputResultFilePath);
-            //    Type = "text/txt",
-            //    Filename = "HelloNamesPoweredByAzureDurableFunctions.png",
-            //    Disposition = "inline",
-            //    ContentId = "Banner 2"
-            //};
-            //msg.AddAttachment(banner2);
-
-
-            log.LogInformation($"sending email to  {recipients }.");
-            log.LogInformation($"All emails sent {isEmailSent }.");
-            return $"Email sent is {isEmailSent}!";
+                throw;
+            }
         }
         public static List<string> ReadInputStringsFromFile()
         {
