@@ -32,8 +32,7 @@ namespace FunctionChainExample
             {
                 var greetingsOutputs = new List<string>();
                 var exportedGreetingsOutput = new List<string>();
-
-                // Read names from local text file .txt 
+            
                 //TODO: Make this method as activity               
                 var nameLists = ReadInputStringsFromFile();
 
@@ -56,7 +55,8 @@ namespace FunctionChainExample
             
                 //CHAIN#3 - Email the output greetings using SendGrid API
                 //TODO: Nullcheck & add sendgrid API to send email
-                await context.CallActivityAsync("SendAllGreetingsToEmailActivity", greetingsOutputs);                
+                await context.CallActivityAsync("SendAllGreetingsToEmailActivity", greetingsOutputs);
+                log.LogInformation($" DONE! Sent greetings to emails " + "\n");
 
                 return greetingsOutputs; //Print to console logs 
             }
