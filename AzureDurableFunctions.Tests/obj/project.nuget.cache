@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Bqf1t3rPE5aGXgdxu/wm2r719peJea+CS6WT9AvXhm9KK8hOZOAVoZeu2fdy/IfowQSxahzRuLZn9hMRNIpbzg==",
+  "dgSpecHash": "tmsCw/XXteU6+59CEeKTIWGt0pdpbHeATYKWTiAL9HJVmeS4rXjmmhjWp4Y4ZcT1QYcM7GVwKDpGlXVNHWP/LQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\AzureDurableFunctions.Tests\\AzureDurableFunctions.Tests.csproj",
   "expectedPackageFiles": [
@@ -105,6 +105,8 @@
     "C:\\Users\\jonah.andersson\\.nuget\\packages\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\jonah.andersson\\.nuget\\packages\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\jonah.andersson\\.nuget\\packages\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
+    "C:\\Users\\jonah.andersson\\.nuget\\packages\\sendgrid\\9.22.0\\sendgrid.9.22.0.nupkg.sha512",
+    "C:\\Users\\jonah.andersson\\.nuget\\packages\\starkbank-ecdsa\\1.2.0\\starkbank-ecdsa.1.2.0.nupkg.sha512",
     "C:\\Users\\jonah.andersson\\.nuget\\packages\\system.appcontext\\4.3.0\\system.appcontext.4.3.0.nupkg.sha512",
     "C:\\Users\\jonah.andersson\\.nuget\\packages\\system.buffers\\4.5.0\\system.buffers.4.5.0.nupkg.sha512",
     "C:\\Users\\jonah.andersson\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",

@@ -13,7 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpAsyncAPIExample", "..\H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HumanInteractionExample", "..\HumanInteractionExample\HumanInteractionExample.csproj", "{95767B85-1376-4431-8363-D7F1CE842DC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDurableFunctionsUpgradeNet5Example", "..\AzureDurableFunctionsUpgradeNet5Example\AzureDurableFunctionsUpgradeNet5Example.csproj", "{B685A8C3-F599-4A23-BCB9-D8E430E710CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDurableFunctionsUpgradeNet5Example", "..\AzureDurableFunctionsUpgradeNet5Example\AzureDurableFunctionsUpgradeNet5Example.csproj", "{B685A8C3-F599-4A23-BCB9-D8E430E710CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDurableFunctions.Mail", "..\AzureDurableFunctions.Mail\AzureDurableFunctions.Mail.csproj", "{E294F3AC-4DAD-4513-A810-5679E31DC446}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDurableFunctions.BlazorApp", "..\AzureDurableFunctions.BlazorApp\AzureDurableFunctions.BlazorApp.csproj", "{93686E21-B9B4-470E-8DDA-363228C903A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDurableFunctions.MailSender", "..\AzureDurableFunctions.MailSender\AzureDurableFunctions.MailSender.csproj", "{4DB53B4E-F447-4A98-B982-94F164B3A376}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +51,18 @@ Global
 		{B685A8C3-F599-4A23-BCB9-D8E430E710CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B685A8C3-F599-4A23-BCB9-D8E430E710CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B685A8C3-F599-4A23-BCB9-D8E430E710CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E294F3AC-4DAD-4513-A810-5679E31DC446}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E294F3AC-4DAD-4513-A810-5679E31DC446}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E294F3AC-4DAD-4513-A810-5679E31DC446}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E294F3AC-4DAD-4513-A810-5679E31DC446}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93686E21-B9B4-470E-8DDA-363228C903A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93686E21-B9B4-470E-8DDA-363228C903A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93686E21-B9B4-470E-8DDA-363228C903A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93686E21-B9B4-470E-8DDA-363228C903A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DB53B4E-F447-4A98-B982-94F164B3A376}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB53B4E-F447-4A98-B982-94F164B3A376}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB53B4E-F447-4A98-B982-94F164B3A376}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB53B4E-F447-4A98-B982-94F164B3A376}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
