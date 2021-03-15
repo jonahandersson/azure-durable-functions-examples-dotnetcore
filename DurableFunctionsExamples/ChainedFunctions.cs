@@ -55,8 +55,12 @@ namespace FunctionChainExample
             
                 //CHAIN#3 - Email the output greetings using SendGrid API
                 //TODO: Nullcheck & add sendgrid API to send email
-                await context.CallActivityAsync("SendAllGreetingsToEmailActivity", greetingsOutputs);
+               await context.CallActivityAsync("SendAllGreetingsToEmailActivity", greetingsOutputs);
                 log.LogInformation($" DONE! Sent greetings to emails " + "\n");
+
+                //CHAIN #3 ChainedFunctions_SSaveGreetingsToOutputToAzureStorage
+                //TODO: Save file to Azure Storage, get and read output file first to save to storage using prev call async result
+              //  context.CallActivityAsync("ChainedFunctions_SSaveGreetingsToOutputToAzureStorage", resultFileWithOutput);
 
                 return greetingsOutputs; //Print to console logs 
             }
@@ -121,7 +125,6 @@ namespace FunctionChainExample
                         }
                     }
 
-
                     //TODO Debug
                 }
                 log.LogInformation($"Done writng greetings to output text file. Input FIle had total names of '{outputGreetings.Count}'." + "\n");
@@ -164,7 +167,7 @@ namespace FunctionChainExample
                 {
                     foreach (var helloMessage in messages)
                     {
-                        msg.AddContent(MimeType.Html, "<b>" + helloMessage + "</b>");
+                        msg.AddContent(MimeType.Html, "<b>" + helloMessage.ToString() + "</b>");
                     }
                 }
 
@@ -175,18 +178,7 @@ namespace FunctionChainExample
                     isEmailSent = true;
                 }
 
-                //TODO : Add output text as attachment to email 
-                //var helloNamesAttachments = new Attachment()
-                //{
-                //    Content = Convert.ToBase64String(outputResultFilePath);
-                //    Type = "text/txt",
-                //    Filename = "HelloNamesPoweredByAzureDurableFunctions.png",
-                //    Disposition = "inline",
-                //    ContentId = "Banner 2"
-                //};
-                //msg.AddAttachment(banner2);
-
-
+                
                 log.LogInformation($"sending email to  {recipients }.");
                 log.LogInformation($"All emails sent {isEmailSent }.");
                 return $"Email sent is {isEmailSent}!";
@@ -198,6 +190,54 @@ namespace FunctionChainExample
                 throw;
             }
         }
+
+
+        [FunctionName("ChainedFunctions_SSaveGreetingsToOutputToAzureStorage")]
+        public static List<string> SaveGreetingsToOutputToAzureStorage([ActivityTrigger] List<string> outputGreetings, ILogger log)
+        {
+            try
+            {
+                //var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "\\outputResult.txt"); 
+                string outputPath = @"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\outputResult.txt";
+
+                if (outputGreetings.Count > 0)
+                {
+
+                    // This text is added only once to the file.
+                    if (!File.Exists(outputPath))
+                    {
+                        // Create a file to write to.
+                        using (StreamWriter sw = File.CreateText(outputPath))
+                        {
+                            foreach (var helloNameGreeting in outputGreetings)
+                            {
+                                sw.WriteLine(helloNameGreeting);
+                            }
+
+                        }
+                    }
+
+                    using (StreamWriter sw = File.AppendText(outputPath))
+                    {
+                        foreach (var helloNameGreeting in outputGreetings)
+                        {
+                            sw.WriteLine(helloNameGreeting);
+                        }
+                    }
+
+                    //TODO Debug
+                }
+                log.LogInformation($"Done writng greetings to output text file. Input FIle had total names of '{outputGreetings.Count}'." + "\n");
+
+                return outputGreetings;
+            }
+            catch (Exception)
+            {
+                //TODO : Handle errors and exceptions 
+                throw;
+            }
+        }
+
         public static List<string> ReadInputStringsFromFile()
         {
             List<string> inputStrings = new List<string>();
