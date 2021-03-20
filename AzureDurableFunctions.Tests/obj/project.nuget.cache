@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "tmsCw/XXteU6+59CEeKTIWGt0pdpbHeATYKWTiAL9HJVmeS4rXjmmhjWp4Y4ZcT1QYcM7GVwKDpGlXVNHWP/LQ==",
+  "dgSpecHash": "aEBwkuZwzwm/aJniCc4A7K3QXfcXa8ZQu8cri5kQ3lZ7k4DPD8sEOTXUbWmROpqlqCISTVdNNk9XoXdYfNDAXw==",
   "success": true,
   "projectFilePath": "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\AzureDurableFunctions.Tests\\AzureDurableFunctions.Tests.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\jonah.andersson\\.nuget\\packages\\azure.core\\1.0.2\\azure.core.1.0.2.nupkg.sha512",
+    "C:\\Users\\jonah.andersson\\.nuget\\packages\\azure.core\\1.8.1\\azure.core.1.8.1.nupkg.sha512",
     "C:\\Users\\jonah.andersson\\.nuget\\packages\\azure.identity\\1.1.1\\azure.identity.1.1.1.nupkg.sha512",
+    "C:\\Users\\jonah.andersson\\.nuget\\packages\\azure.storage.blobs\\12.8.0\\azure.storage.blobs.12.8.0.nupkg.sha512",
+    "C:\\Users\\jonah.andersson\\.nuget\\packages\\azure.storage.common\\12.7.0\\azure.storage.common.12.7.0.nupkg.sha512",
     "C:\\Users\\jonah.andersson\\.nuget\\packages\\castle.core\\4.4.0\\castle.core.4.4.0.nupkg.sha512",
     "C:\\Users\\jonah.andersson\\.nuget\\packages\\coverlet.collector\\3.0.3\\coverlet.collector.3.0.3.nupkg.sha512",
     "C:\\Users\\jonah.andersson\\.nuget\\packages\\dynamitey\\2.0.9.136\\dynamitey.2.0.9.136.nupkg.sha512",

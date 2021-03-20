@@ -8,11 +8,13 @@ using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using Azure;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
 namespace FunctionChainExample
 {
@@ -23,9 +25,7 @@ namespace FunctionChainExample
     public static class ChainedFunctions
     {
         private static readonly IConfiguration _configuration;    
-        private static string pathToInputFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\names.txt");
-        private static string pathToOutputFileFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\outputGreetings.txt");
-
+        
         [FunctionName("ChainedFunctions_Orchestrator")]
         public static async Task<List<string>> RunOrchestrator(
             [OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
@@ -37,7 +37,9 @@ namespace FunctionChainExample
                 var greetingsOutputs = new List<string>();
                 var exportedGreetingsOutput = new List<string>();
                 var nameList = new List<Person>();
-
+                //  string pathToInputFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\names.txt");
+                string pathToInputFile = @"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\Data\names.txt";
+             
                 // CHAIN # 1 - Activity async function that reads input text from file
                 List<string> nameLists = await context.CallActivityAsync<List<string>>("ChainedFunctions_ReadInputStringsFromFile", pathToInputFile);
 
@@ -56,20 +58,19 @@ namespace FunctionChainExample
                 if (greetingsOutputs.Count > 0)
                 {
                     await context.CallActivityAsync("ChainedFunctions_SaveToOutputResultFileActivity", greetingsOutputs);
+
+                    //TODO in this chain - Save greeting to a Azue Blob Storage and email link to Blob 
+                    await context.CallActivityAsync("ChainedFunctions_SaveGreetingsToOutputToAzureStorage", greetingsOutputs);
+                  
+                    
+                    //await context.CallActivityAsync("SendAllGreetingsToEmailActivity", greetingsOutputs);
+                    //log.LogInformation($" DONE! Sent greetings to emails " + "\n");
+
                 }
-            
-
-                //TODO : Use Fan-Out Fan-In Pattern to save both files to Azure Storage Blobs 
-                //CHAIN#3 - Email the output greetings using SendGrid API
-                //TODO: Nullcheck & add sendgrid API to send email
-               await context.CallActivityAsync("SendAllGreetingsToEmailActivity", greetingsOutputs);
-                log.LogInformation($" DONE! Sent greetings to emails " + "\n");
-
-                //CHAIN #3 ChainedFunctions_SSaveGreetingsToOutputToAzureStorage
-                //TODO: Save file to Azure Storage, get and read output file first to save to storage using prev call async result
-              //  context.CallActivityAsync("ChainedFunctions_SSaveGreetingsToOutputToAzureStorage", resultFileWithOutput);
 
                 return greetingsOutputs; //Print to console logs 
+
+
             }
             catch (Exception)
             {
@@ -104,16 +105,18 @@ namespace FunctionChainExample
         {
             try
             {
-               
+                // string pathToOutputFileFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\outputGreetings.txt");
+                string pathToOutputFileFile = @"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\Data\outputResult.txt";
                 if (outputGreetings.Count > 0)
                 {
-                    string outputPath = @"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\outputResult.txt";
+                   
                     // This text is added only once to the file.
-                    if (!File.Exists(outputPath))
+                    if (!File.Exists(pathToOutputFileFile))
                     {
                         // Create a file to write to.
-                        using (StreamWriter sw = File.CreateText(outputPath))
+                        using (StreamWriter sw = File.CreateText(pathToOutputFileFile))
                         {
+                         
                             foreach (var helloNameGreeting in outputGreetings)
                             {
                                 sw.WriteLine(helloNameGreeting);
@@ -121,14 +124,17 @@ namespace FunctionChainExample
                           
                         }
                     }
-
-                    using (StreamWriter sw = File.AppendText(outputPath))
+                    else
                     {
-                        foreach (var helloNameGreeting in outputGreetings)
+                        using (StreamWriter sw = File.CreateText(pathToOutputFileFile))
                         {
-                            sw.WriteLine(helloNameGreeting);
+                            foreach (var helloNameGreeting in outputGreetings)
+                            {
+                                sw.WriteLine(helloNameGreeting);
+                            }
                         }
                     }
+                   
 
                     //TODO Debug
                 }
@@ -196,68 +202,76 @@ namespace FunctionChainExample
             }
         }
 
-
         [FunctionName("ChainedFunctions_SaveGreetingsToOutputToAzureStorage")]
-        public static List<string> SaveGreetingsToOutputToAzureStorage([ActivityTrigger] List<string> outputGreetings, ILogger log)
+        public static async Task<string> SaveGreetingsToOutputToAzureStorageAsync([ActivityTrigger] List<string> outputGreetings, ILogger log)
         {
+           
             try
             {
-                //var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "\\outputResult.txt"); 
-                string outputPath = @"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\outputResult.txt";
 
-                if (outputGreetings.Count > 0)
-                {
+               await CreateContainerAndUploadBlobAsync(log);
 
-                    // This text is added only once to the file.
-                    if (!File.Exists(outputPath))
-                    {
-                        // Create a file to write to.
-                        using (StreamWriter sw = File.CreateText(outputPath))
-                        {
-                            foreach (var helloNameGreeting in outputGreetings)
-                            {
-                                sw.WriteLine(helloNameGreeting);
-                            }
-
-                        }
-                    }
-
-                    using (StreamWriter sw = File.AppendText(outputPath))
-                    {
-                        foreach (var helloNameGreeting in outputGreetings)
-                        {
-                            sw.WriteLine(helloNameGreeting);
-                        }
-                    }
-
-                    //TODO Debug
-                }
-                log.LogInformation($"Done writng greetings to output text file. Input FIle had total names of '{outputGreetings.Count}'." + "\n");
-
-                return outputGreetings;
+                //await ListContainersWithTheirBlobsAsync();
+                //await DownloadBlobAsync();
+                //await DeleteContainerAsync();
+                
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //TODO : Handle errors and exceptions 
-                throw;
+                //TODO : Handle errors and exceptions
+
+                log.LogError($"Error: {ex.InnerException}");
+               
             }
+            return "Test Added to Azure Blob";
         }
 
-        public static List<string> ReadInputStringsFromFile()
+        private static async Task<string> CreateContainerAndUploadBlobAsync(ILogger log)
         {
-            List<string> inputStrings = new List<string>();
-            //var inputNamesTextFilePath = Path.Combine(Directory.GetCurrentDirectory(), "\\names.txt");
-            using (var streamReader = new StreamReader(@"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\names.txt"))
-            {
-                while (streamReader.Peek() >= 0)
-                    inputStrings.Add(streamReader.ReadLine());
-            }
-            return inputStrings;
-        }
 
+            var outputGreetingsUrl = " ";
+            try
+            {
+                string connectionString = "";
+                string blobContainerName = "jonahsgreetingscontainer";
+                string blobName = "helloazdurablefunctionsgreetings.txt";
+
+                // Create the Blob Container
+                BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+                BlobContainerClient blobContainerClient =
+                    blobServiceClient.GetBlobContainerClient(blobContainerName);
+
+                log.LogInformation($"Creating blob container '{blobContainerName}'");
+
+                await blobContainerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
+
+                // Upload Blob
+                BlobClient blobClient = blobContainerClient.GetBlobClient(blobName);
+
+                log.LogInformation($"Uploading blob '{blobClient.Name}'");
+                log.LogInformation($"   > {blobClient.Uri}");
+
+                using FileStream fileStream = File.OpenRead(@"\Data\outputResult.txt");
+
+                await blobClient.UploadAsync(fileStream,
+                 new BlobHttpHeaders { ContentType = "text/txt" });
+
+
+                outputGreetingsUrl =  blobContainerClient.Uri.ToString();
+            }
+            catch (Exception ex)
+            {
+                //TODO : Handle errors and exceptions
+
+                log.LogError($"Error: {ex.InnerException}");
+
+            }
+            return outputGreetingsUrl;
+        }
 
         [FunctionName("ChainedFunctions_ReadInputStringsFromFile")]
-        public static List<string> ReadInputFromFileAsync([ActivityTrigger] string pathToFile, ILogger log)
+        public static List<string> ReadInputFromFileAsync([ActivityTrigger] string pathToInputFile, ILogger log)
         {
 
             try
@@ -266,7 +280,7 @@ namespace FunctionChainExample
                 //var inputNamesTextFilePath = Path.Combine(Directory.GetCurrentDirectory(), "\\names.txt");
                 log.LogInformation("Reading strings of name from the input file.");
 
-                using (var streamReader = new StreamReader(@"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\names.txt"))
+                using (var streamReader = new StreamReader(pathToInputFile))
                 {
                     while (streamReader.Peek() >= 0)
                         inputStrings.Add(streamReader.ReadLine());

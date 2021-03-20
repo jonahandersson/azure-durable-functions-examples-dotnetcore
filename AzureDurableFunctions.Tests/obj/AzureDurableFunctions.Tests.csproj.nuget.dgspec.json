@@ -139,6 +139,10 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "dependencies": {
+            "Azure.Storage.Blobs": {
+              "target": "Package",
+              "version": "[12.8.0, )"
+            },
             "Microsoft.Azure.WebJobs.Extensions.DurableTask": {
               "target": "Package",
               "version": "[2.4.1, )"

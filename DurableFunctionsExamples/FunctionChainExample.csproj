@@ -9,11 +9,15 @@
     <Content Remove="C:\Users\jonah.andersson\.nuget\packages\microsoft.azure.functions.worker.sdk\1.0.0-preview1\contentFiles\any\netstandard2.0\worker.config.json" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.8.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.DurableTask" Version="2.4.1" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.11" />
     <PackageReference Include="SendGrid" Version="9.22.0" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Data\names.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="host.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
