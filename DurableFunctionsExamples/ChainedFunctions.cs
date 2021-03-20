@@ -57,19 +57,19 @@ namespace FunctionChainExample
                 //CHAIN#3 - Read each greeting output and save it into a another text file
                 if (greetingsOutputs.Count > 0)
                 {
+                    // Task 1 - Save greetings result to output text file
                     await context.CallActivityAsync("ChainedFunctions_SaveToOutputResultFileActivity", greetingsOutputs);
 
-                    //TODO in this chain - Save greeting to a Azue Blob Storage and email link to Blob 
+                    //Task 2 Save greeting to a Azue Blob Storage and email link to Blob 
                     await context.CallActivityAsync("ChainedFunctions_SaveGreetingsToOutputToAzureStorage", greetingsOutputs);
                   
                     
-                    //await context.CallActivityAsync("SendAllGreetingsToEmailActivity", greetingsOutputs);
+                    //TODO: await context.CallActivityAsync("SendAllGreetingsToEmailActivity", greetingsOutputs);
                     //log.LogInformation($" DONE! Sent greetings to emails " + "\n");
 
                 }
 
                 return greetingsOutputs; //Print to console logs 
-
 
             }
             catch (Exception)
@@ -79,6 +79,19 @@ namespace FunctionChainExample
             }           
         }
 
+        [FunctionName("ChainedFunctions_HttpStart")]
+        public static async Task<HttpResponseMessage> HttpStart(
+          [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestMessage req,
+          [DurableClient] IDurableOrchestrationClient starter,
+          ILogger log)
+        {
+            // Function input comes from the request content.
+            string instanceId = await starter.StartNewAsync("ChainedFunctions_Orchestrator", null);
+            log.LogInformation($"Started orchestration with ID = '{instanceId}'." + "\n");
+
+            return starter.CreateCheckStatusResponse(req, instanceId);
+        }
+
         [FunctionName("ChainedFunctions_NameGreeterActivity")]
         public static string SayHello([ActivityTrigger] string name, ILogger log)
         {          
@@ -86,20 +99,29 @@ namespace FunctionChainExample
             return $"Hello {name}!";
         }
 
-        [FunctionName("ChainedFunctions_HttpStart")]
-        public static async Task<HttpResponseMessage> HttpStart(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestMessage req,
-            [DurableClient] IDurableOrchestrationClient starter,
-            ILogger log)
+        [FunctionName("ChainedFunctions_ReadInputStringsFromFile")]
+        public static List<string> ReadInputFromFileAsync([ActivityTrigger] string pathToInputFile, ILogger log)
         {
-            // Function input comes from the request content.
-            string instanceId = await starter.StartNewAsync("ChainedFunctions_Orchestrator", null);            
+            try
+            {
+                List<string> inputStrings = new List<string>();
+                //var inputNamesTextFilePath = Path.Combine(Directory.GetCurrentDirectory(), "\\names.txt");
+                log.LogInformation("Reading strings of name from the input file.");
 
-            log.LogInformation($"Started orchestration with ID = '{instanceId}'." + "\n");          
+                using (var streamReader = new StreamReader(pathToInputFile))
+                {
+                    while (streamReader.Peek() >= 0)
+                        inputStrings.Add(streamReader.ReadLine());
+                }
+                return inputStrings;
+            }
+            catch (Exception)
+            {
+                //TODO: Handle errors 
 
-            return starter.CreateCheckStatusResponse(req, instanceId);
+                throw;
+            }
         }
-
         [FunctionName("ChainedFunctions_SaveToOutputResultFileActivity")]
         public static List<string> SaveGreetingsToOutputLocalFile([ActivityTrigger] List<string> outputGreetings, ILogger log)
         {
@@ -149,10 +171,37 @@ namespace FunctionChainExample
             }
         }
 
+        [FunctionName("ChainedFunctions_SaveGreetingsToOutputToAzureStorage")]
+        public static async Task<string> SaveGreetingsToOutputToAzureStorageAsync([ActivityTrigger] List<string> outputGreetings, ILogger log)
+        {
+            string connectionString = "";
+            string blobContainerName = "jonahsgreetingscontainer";
+            string blobName = "helloazdurablefunctionsgreetings.txt";
+
+            try
+            {
+
+                await CreateContainerAndUploadBlobAsync(connectionString, blobContainerName, blobName, log);
+                var blobItems = await ListContainersWithTheirBlobsAsync(connectionString, log);
+                
+                //TODO Verify AZ Portal 
+                // TODO await DeleteContainerAsync();
+
+            }
+            catch (Exception ex)
+            {
+                //TODO : Handle errors and exceptions
+
+                log.LogError($"Error: {ex.InnerException}");
+
+            }
+            return "Test Added to Azure Blob";
+        }
+
         [FunctionName("SendAllGreetingsToEmailActivity")]
         public static async Task<string> SendEmailsAsync([ActivityTrigger] List<string> messages, ILogger log)
         {
-         
+
             try
             {
                 var sendGridAPIKey = "<Your SENDGRID API KEY here -->";
@@ -189,7 +238,7 @@ namespace FunctionChainExample
                     isEmailSent = true;
                 }
 
-                
+
                 log.LogInformation($"sending email to  {recipients }.");
                 log.LogInformation($"All emails sent {isEmailSent }.");
                 return $"Email sent is {isEmailSent}!";
@@ -202,40 +251,13 @@ namespace FunctionChainExample
             }
         }
 
-        [FunctionName("ChainedFunctions_SaveGreetingsToOutputToAzureStorage")]
-        public static async Task<string> SaveGreetingsToOutputToAzureStorageAsync([ActivityTrigger] List<string> outputGreetings, ILogger log)
+
+        #region Private Async Tasks Functions 
+        private static async Task<string> CreateContainerAndUploadBlobAsync(string connectionString, string blobContainerName, string blobName,  ILogger log)
         {
-           
-            try
-            {
-
-               await CreateContainerAndUploadBlobAsync(log);
-
-                //await ListContainersWithTheirBlobsAsync();
-                //await DownloadBlobAsync();
-                //await DeleteContainerAsync();
-                
-            }
-            catch (Exception ex)
-            {
-                //TODO : Handle errors and exceptions
-
-                log.LogError($"Error: {ex.InnerException}");
-               
-            }
-            return "Test Added to Azure Blob";
-        }
-
-        private static async Task<string> CreateContainerAndUploadBlobAsync(ILogger log)
-        {
-
             var outputGreetingsUrl = " ";
             try
-            {
-                string connectionString = "";
-                string blobContainerName = "jonahsgreetingscontainer";
-                string blobName = "helloazdurablefunctionsgreetings.txt";
-
+            {             
                 // Create the Blob Container
                 BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
 
@@ -257,7 +279,6 @@ namespace FunctionChainExample
                 await blobClient.UploadAsync(fileStream,
                  new BlobHttpHeaders { ContentType = "text/txt" });
 
-
                 outputGreetingsUrl =  blobContainerClient.Uri.ToString();
             }
             catch (Exception ex)
@@ -270,31 +291,33 @@ namespace FunctionChainExample
             return outputGreetingsUrl;
         }
 
-        [FunctionName("ChainedFunctions_ReadInputStringsFromFile")]
-        public static List<string> ReadInputFromFileAsync([ActivityTrigger] string pathToInputFile, ILogger log)
+        private static async Task<List<string>> ListContainersWithTheirBlobsAsync(string connectionString, ILogger log)
         {
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            var blobNameItems = new List<string>();
 
-            try
+            log.LogInformation("Listing containers and blobs "
+                + $"of '{blobServiceClient.AccountName}' account");
+
+            await foreach (BlobContainerItem blobContainerItem  in blobServiceClient.GetBlobContainersAsync())
             {
-                List<string> inputStrings = new List<string>();
-                //var inputNamesTextFilePath = Path.Combine(Directory.GetCurrentDirectory(), "\\names.txt");
-                log.LogInformation("Reading strings of name from the input file.");
+                log.LogInformation($"   > {blobContainerItem.Name}");
 
-                using (var streamReader = new StreamReader(pathToInputFile))
+                BlobContainerClient blobContainerClient =
+                  blobServiceClient.GetBlobContainerClient(blobContainerItem.Name);
+
+                await foreach (BlobItem blobItem in blobContainerClient.GetBlobsAsync())
                 {
-                    while (streamReader.Peek() >= 0)
-                        inputStrings.Add(streamReader.ReadLine());
+                    blobNameItems.Add(blobItem.Name);
+                    log.LogInformation($" - {blobItem.Name}");
                 }
-                return inputStrings;
             }
-            catch (Exception)
-            {
-                //TODO: Handle errors 
 
-                throw;
-            }
+            return blobNameItems;
         }
 
+        #endregion
 
+      
     }
 }
