@@ -1,0 +1,4 @@
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Mail\obj\Debug\netcoreapp3.1\AzureDurableFunctions.Mail.csprojAssemblyReference.cache
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Mail\obj\Debug\netcoreapp3.1\AzureDurableFunctions.Mail.AssemblyInfoInputs.cache
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Mail\obj\Debug\netcoreapp3.1\AzureDurableFunctions.Mail.AssemblyInfo.cs
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Mail\obj\Debug\netcoreapp3.1\AzureDurableFunctions.Mail.csproj.CoreCompileInputs.cache

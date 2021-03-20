@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace FunctionChainExample
 {
@@ -21,22 +22,26 @@ namespace FunctionChainExample
     /// </summary>
     public static class ChainedFunctions
     {
-
-        private static readonly IConfiguration _configuration;
+        private static readonly IConfiguration _configuration;    
+        private static string pathToInputFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\names.txt");
+        private static string pathToOutputFileFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\outputGreetings.txt");
 
         [FunctionName("ChainedFunctions_Orchestrator")]
         public static async Task<List<string>> RunOrchestrator(
             [OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
         {
+
             try
             {
+                //Lists to save data 
                 var greetingsOutputs = new List<string>();
                 var exportedGreetingsOutput = new List<string>();
-            
-                //TODO: Make this method as activity               
-                var nameLists = ReadInputStringsFromFile();
+                var nameList = new List<Person>();
 
-                // CHAIN #1 - Add names to output list and greet each person in the text file using NameGreetingActivity
+                // CHAIN # 1 - Activity async function that reads input text from file
+                List<string> nameLists = await context.CallActivityAsync<List<string>>("ChainedFunctions_ReadInputStringsFromFile", pathToInputFile);
+
+                // CHAIN #2 - Add names to output list and greet each person in the text file using NameGreetingActivity
                 if (nameLists.Count > 0)
                 {
                     foreach (var name in nameLists)
@@ -47,12 +52,14 @@ namespace FunctionChainExample
 
                 log.LogInformation($" DONE! Said Hello to {nameLists.Count} people " + "\n");
 
-                //CHAIN#2 - Email the output greetings using SendGrid API
+                //CHAIN#3 - Read each greeting output and save it into a another text file
                 if (greetingsOutputs.Count > 0)
                 {
                     await context.CallActivityAsync("ChainedFunctions_SaveToOutputResultFileActivity", greetingsOutputs);
                 }
             
+
+                //TODO : Use Fan-Out Fan-In Pattern to save both files to Azure Storage Blobs 
                 //CHAIN#3 - Email the output greetings using SendGrid API
                 //TODO: Nullcheck & add sendgrid API to send email
                await context.CallActivityAsync("SendAllGreetingsToEmailActivity", greetingsOutputs);
@@ -97,12 +104,10 @@ namespace FunctionChainExample
         {
             try
             {
-                //var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "\\outputResult.txt"); 
-                string outputPath = @"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\outputResult.txt";
-
+               
                 if (outputGreetings.Count > 0)
-                {                 
-
+                {
+                    string outputPath = @"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\outputResult.txt";
                     // This text is added only once to the file.
                     if (!File.Exists(outputPath))
                     {
@@ -192,7 +197,7 @@ namespace FunctionChainExample
         }
 
 
-        [FunctionName("ChainedFunctions_SSaveGreetingsToOutputToAzureStorage")]
+        [FunctionName("ChainedFunctions_SaveGreetingsToOutputToAzureStorage")]
         public static List<string> SaveGreetingsToOutputToAzureStorage([ActivityTrigger] List<string> outputGreetings, ILogger log)
         {
             try
@@ -249,5 +254,33 @@ namespace FunctionChainExample
             }
             return inputStrings;
         }
+
+
+        [FunctionName("ChainedFunctions_ReadInputStringsFromFile")]
+        public static List<string> ReadInputFromFileAsync([ActivityTrigger] string pathToFile, ILogger log)
+        {
+
+            try
+            {
+                List<string> inputStrings = new List<string>();
+                //var inputNamesTextFilePath = Path.Combine(Directory.GetCurrentDirectory(), "\\names.txt");
+                log.LogInformation("Reading strings of name from the input file.");
+
+                using (var streamReader = new StreamReader(@"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\names.txt"))
+                {
+                    while (streamReader.Peek() >= 0)
+                        inputStrings.Add(streamReader.ReadLine());
+                }
+                return inputStrings;
+            }
+            catch (Exception)
+            {
+                //TODO: Handle errors 
+
+                throw;
+            }
+        }
+
+
     }
 }
