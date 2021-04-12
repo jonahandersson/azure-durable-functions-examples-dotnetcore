@@ -37,11 +37,14 @@ namespace FunctionChainExample
                 var greetingsOutputs = new List<string>();
                 var exportedGreetingsOutput = new List<string>();
                 var nameList = new List<Person>();
-                //  string pathToInputFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\names.txt");
+               // string pathToInputFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\names.txt");                
                 string pathToInputFile = @"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\Data\names.txt";
              
-                // CHAIN # 1 - Activity async function that reads input text from file
-                List<string> nameLists = await context.CallActivityAsync<List<string>>("ChainedFunctions_ReadInputStringsFromFile", pathToInputFile);
+                // CHAIN # 1 - Activity async function with retry. Function reads input text from file
+                List<string> nameLists = await context.CallActivityWithRetryAsync<List<string>>("ChainedFunctions_ReadInputStringsFromFile",
+                    new RetryOptions(TimeSpan.FromSeconds(30),3)
+                    { Handle = ex => ex.InnerException.Message == "Reading input strings from file failed."},                    
+                    pathToInputFile);
 
                 // CHAIN #2 - Add names to output list and greet each person in the text file using NameGreetingActivity
                 if (nameLists.Count > 0)
@@ -60,9 +63,8 @@ namespace FunctionChainExample
                     // Task 1 - Save greetings result to output text file
                     await context.CallActivityAsync("ChainedFunctions_SaveToOutputResultFileActivity", greetingsOutputs);
 
-                    //Task 2 Save greeting to a Azue Blob Storage and email link to Blob 
-                    await context.CallActivityAsync("ChainedFunctions_SaveGreetingsToOutputToAzureStorage", greetingsOutputs);
-                  
+                    //TODO Task 2 Save greeting to a Azure Blob Storage and email link to Blob 
+                    //await context.CallActivityAsync("ChainedFunctions_SaveGreetingsToOutputToAzureStorage", greetingsOutputs);                  
                     
                     //TODO: await context.CallActivityAsync("SendAllGreetingsToEmailActivity", greetingsOutputs);
                     //log.LogInformation($" DONE! Sent greetings to emails " + "\n");
@@ -72,11 +74,18 @@ namespace FunctionChainExample
                 return greetingsOutputs; //Print to console logs 
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //TODO: Error Handling logic here
+                //TODO: Error Handling logic here   
+                DoYourCleanUp();
+                log.LogError($" Error! Something went wrong. Fix it or handle it! {ex.Message} " + "\n");
                 throw;
             }           
+        }
+
+        private static void DoYourCleanUp()
+        {
+            throw new NotImplementedException();
         }
 
         [FunctionName("ChainedFunctions_HttpStart")]
@@ -96,7 +105,7 @@ namespace FunctionChainExample
         public static string SayHello([ActivityTrigger] string name, ILogger log)
         {          
             log.LogInformation($"<--- MESSAGE FROM ACTIVITY FUNCTION --->  Saying hello to {name}." + "\n");
-            return $"Hello {name}!";
+            return $"Hello {name}! Welcome to AzureLive! :) ";
         }
 
         [FunctionName("ChainedFunctions_ReadInputStringsFromFile")]
@@ -115,11 +124,11 @@ namespace FunctionChainExample
                 }
                 return inputStrings;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //TODO: Handle errors 
-
-                throw;
+                //TODO: Handle errors                 
+                log.LogError($" Error! Something went wrong. Fix it or handle it! {ex.Message} " + "\n");
+                return new List<string>();
             }
         }
         [FunctionName("ChainedFunctions_SaveToOutputResultFileActivity")]

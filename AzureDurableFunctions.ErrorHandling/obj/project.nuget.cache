@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "vuqSIHD8J5eNwFJ6EqQP4MLEdftpB4j8jpV4rv2YHTA88skvNNq1GB9uwcbhsvYhfYGPN+fO9/SC9+DFJc7UnA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\jonah.andersson\\Dropbox\\Dev_AzureProjects\\AzureDurableFunctionsExamplePatterns\\AzureDurableFunctions.ErrorHandling\\AzureDurableFunctions.ErrorHandling.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jonah.andersson\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\jonah.andersson\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
