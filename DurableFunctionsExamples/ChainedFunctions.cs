@@ -30,20 +30,19 @@ namespace FunctionChainExample
         public static async Task<List<string>> RunOrchestrator(
             [OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
         {
-
             try
             {
                 //Lists to save data 
                 var greetingsOutputs = new List<string>();
                 var exportedGreetingsOutput = new List<string>();
                 var nameList = new List<Person>();
-               // string pathToInputFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\names.txt");                
+                //TODO Refactor below -- string pathToInputFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\names.txt");                
                 string pathToInputFile = @"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\Data\names.txt";
              
                 // CHAIN # 1 - Activity async function with retry. Function reads input text from file
                 List<string> nameLists = await context.CallActivityWithRetryAsync<List<string>>("ChainedFunctions_ReadInputStringsFromFile",
                     new RetryOptions(TimeSpan.FromSeconds(30),3)
-                    { Handle = ex => ex.InnerException.Message == "Reading input strings from file failed."},                    
+                    { Handle = ex => ex.InnerException.Message == "Reading input strings from file failed."},
                     pathToInputFile);
 
                 // CHAIN #2 - Add names to output list and greet each person in the text file using NameGreetingActivity
@@ -60,7 +59,7 @@ namespace FunctionChainExample
                 //CHAIN#3 - Read each greeting output and save it into a another text file
                 if (greetingsOutputs.Count > 0)
                 {
-                    // Task 1 - Save greetings result to output text file
+                    //  Save greetings result to output text file
                     await context.CallActivityAsync("ChainedFunctions_SaveToOutputResultFileActivity", greetingsOutputs);
 
                     //TODO Task 2 Save greeting to a Azure Blob Storage and email link to Blob 
@@ -112,7 +111,8 @@ namespace FunctionChainExample
         public static List<string> ReadInputFromFileAsync([ActivityTrigger] string pathToInputFile, ILogger log)
         {
             try
-            {
+            {              
+
                 List<string> inputStrings = new List<string>();
                 //var inputNamesTextFilePath = Path.Combine(Directory.GetCurrentDirectory(), "\\names.txt");
                 log.LogInformation("Reading strings of name from the input file.");
@@ -260,6 +260,11 @@ namespace FunctionChainExample
             }
         }
 
+        private static string GetLocalFileInputFileToRead()
+        {
+            return @"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\Data\names.txt";
+
+        }
 
         #region Private Async Tasks Functions 
         private static async Task<string> CreateContainerAndUploadBlobAsync(string connectionString, string blobContainerName, string blobName,  ILogger log)
@@ -299,6 +304,8 @@ namespace FunctionChainExample
             }
             return outputGreetingsUrl;
         }
+             
+
 
         private static async Task<List<string>> ListContainersWithTheirBlobsAsync(string connectionString, ILogger log)
         {
