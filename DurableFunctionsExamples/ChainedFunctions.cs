@@ -34,49 +34,39 @@ namespace FunctionChainExample
             {
                 //Lists to save data 
                 var greetingsOutputs = new List<string>();
-                var exportedGreetingsOutput = new List<string>();
-                var nameList = new List<Person>();
-                //TODO Refactor below -- string pathToInputFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\names.txt");                
-                string pathToInputFile = @"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\Data\names.txt";
-             
-                // CHAIN # 1 - Activity async function with retry. Function reads input text from file
-                List<string> nameLists = await context.CallActivityWithRetryAsync<List<string>>("ChainedFunctions_ReadInputStringsFromFile",
+                var exportedGreetingsOutput = new List<string>();            
+              
+                string pathToInputFile = GetLocalFileInputFileToRead();
+
+                // CHAIN # 1 - Activity async function with retry. Function reads input text from file with retry option
+                var nameLists = await context.CallActivityWithRetryAsync<List<Person>>("ChainedFunctions_ReadInputStringsFromFile",
                     new RetryOptions(TimeSpan.FromSeconds(30),3)
-                    { Handle = ex => ex.InnerException.Message == "Reading input strings from file failed."},
-                    pathToInputFile);
+                    { Handle = ex => ex.InnerException.Message == "Reading input strings from file failed."}, pathToInputFile);
 
                 // CHAIN #2 - Add names to output list and greet each person in the text file using NameGreetingActivity
                 if (nameLists.Count > 0)
                 {
-                    foreach (var name in nameLists)
+                    foreach (var personName in nameLists)
                     {
-                        greetingsOutputs.Add(await context.CallActivityAsync<string>("ChainedFunctions_NameGreeterActivity", name));
+                        greetingsOutputs.Add(await context.CallActivityAsync<string>("ChainedFunctions_NameGreeterActivity", personName));
                     }
-                }
-
-                log.LogInformation($" DONE! Said Hello to {nameLists.Count} people " + "\n");
+                }              
 
                 //CHAIN#3 - Read each greeting output and save it into a another text file
                 if (greetingsOutputs.Count > 0)
                 {
                     //  Save greetings result to output text file
                     await context.CallActivityAsync("ChainedFunctions_SaveToOutputResultFileActivity", greetingsOutputs);
+                }              
 
-                    //TODO Task 2 Save greeting to a Azure Blob Storage and email link to Blob 
-                    //await context.CallActivityAsync("ChainedFunctions_SaveGreetingsToOutputToAzureStorage", greetingsOutputs);                  
-                    
-                    //TODO: await context.CallActivityAsync("SendAllGreetingsToEmailActivity", greetingsOutputs);
-                    //log.LogInformation($" DONE! Sent greetings to emails " + "\n");
-
-                }
-
+                log.LogInformation($" DONE! Said Hello to {nameLists.Count} people. " + "\n");
                 return greetingsOutputs; //Print to console logs 
 
             }
             catch (Exception ex)
             {
                 //TODO: Error Handling logic here   
-                DoYourCleanUp();
+               // DoYourCleanUp();
                 log.LogError($" Error! Something went wrong. Fix it or handle it! {ex.Message} " + "\n");
                 throw;
             }           
@@ -84,6 +74,7 @@ namespace FunctionChainExample
 
         private static void DoYourCleanUp()
         {
+            //TODO 
             throw new NotImplementedException();
         }
 
@@ -93,7 +84,8 @@ namespace FunctionChainExample
           [DurableClient] IDurableOrchestrationClient starter,
           ILogger log)
         {
-            // Function input comes from the request content.
+
+            // Function input comes from the request content. You can pass your data here
             string instanceId = await starter.StartNewAsync("ChainedFunctions_Orchestrator", null);
             log.LogInformation($"Started orchestration with ID = '{instanceId}'." + "\n");
 
@@ -101,18 +93,20 @@ namespace FunctionChainExample
         }
 
         [FunctionName("ChainedFunctions_NameGreeterActivity")]
-        public static string SayHello([ActivityTrigger] string name, ILogger log)
-        {          
-            log.LogInformation($"<--- MESSAGE FROM ACTIVITY FUNCTION --->  Saying hello to {name}." + "\n");
-            return $"Hello {name}! Welcome to AzureLive! :) ";
+        public static string SayHello([ActivityTrigger] Person person, ILogger log)
+        {
+            string greetingMessagePerPerson = $"Hello {person.Name}! Welcome to the DEV Show! :) ";
+            log.LogInformation($"<--- MESSAGE FROM ACTIVITY FUNCTION ---> ");
+            log.LogInformation(greetingMessagePerPerson);
+            return greetingMessagePerPerson;
         }
 
         [FunctionName("ChainedFunctions_ReadInputStringsFromFile")]
-        public static List<string> ReadInputFromFileAsync([ActivityTrigger] string pathToInputFile, ILogger log)
+        public static List<Person> ReadInputFromFileAsync([ActivityTrigger] string pathToInputFile, ILogger log)
         {
             try
-            {              
-
+            {
+                var nameList = new List<Person>();
                 List<string> inputStrings = new List<string>();
                 //var inputNamesTextFilePath = Path.Combine(Directory.GetCurrentDirectory(), "\\names.txt");
                 log.LogInformation("Reading strings of name from the input file.");
@@ -122,13 +116,23 @@ namespace FunctionChainExample
                     while (streamReader.Peek() >= 0)
                         inputStrings.Add(streamReader.ReadLine());
                 }
-                return inputStrings;
+
+                if (inputStrings != null || inputStrings.Count > 0)
+                {
+                    foreach (var fullName in inputStrings)
+                    {
+                        Person person = new Person(fullName);
+                        nameList.Add(person);
+                    }
+                }
+             
+                return nameList;
             }
             catch (Exception ex)
             {
                 //TODO: Handle errors                 
                 log.LogError($" Error! Something went wrong. Fix it or handle it! {ex.Message} " + "\n");
-                return new List<string>();
+                return new List<Person>();
             }
         }
         [FunctionName("ChainedFunctions_SaveToOutputResultFileActivity")]
@@ -260,7 +264,7 @@ namespace FunctionChainExample
             }
         }
 
-        private static string GetLocalFileInputFileToRead()
+        public static string GetLocalFileInputFileToRead()
         {
             return @"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\Data\names.txt";
 
@@ -304,8 +308,6 @@ namespace FunctionChainExample
             }
             return outputGreetingsUrl;
         }
-             
-
 
         private static async Task<List<string>> ListContainersWithTheirBlobsAsync(string connectionString, ILogger log)
         {

@@ -16,6 +16,7 @@ namespace HumanInteractionExample
             [OrchestrationTrigger] IDurableOrchestrationContext context)
         {
             var employees = new List<Employee>();
+        
             var managers = new List<Manager>();
             var messagesToManagers = new List<string>();
 

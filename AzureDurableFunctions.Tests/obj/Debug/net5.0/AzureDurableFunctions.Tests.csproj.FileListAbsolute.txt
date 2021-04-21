@@ -191,3 +191,4 @@ C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExampleP
 C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Tests\bin\Debug\net5.0\Azure.Storage.Common.dll
 C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Tests\bin\Debug\net5.0\SendGrid.dll
 C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Tests\bin\Debug\net5.0\StarkbankEcdsa.dll
+C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\AzureDurableFunctions.Tests\bin\Debug\net5.0\Data\outputResult.txt
