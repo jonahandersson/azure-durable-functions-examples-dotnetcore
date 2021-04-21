@@ -266,7 +266,7 @@ namespace FunctionChainExample
 
         public static string GetLocalFileInputFileToRead()
         {
-            return @"C:\Users\jonah.andersson\Dropbox\Dev_AzureProjects\AzureDurableFunctionsExamplePatterns\DurableFunctionsExamples\Data\names.txt";
+            return @"<<The Path to your local file with data ex. \Data\names.txt";
 
         }
 
